@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Chat Record
 // @namespace    https://github.com/HeHang0/tampermonkey
-// @version      1.0
+// @version      1.1
 // @description  ChatGPT search history
 // @author       picapico
 // @copyright    2023, picapico (https://github.com/hehang0)
@@ -102,6 +102,14 @@
     </ol>
 </div>`
 
+    function encodeXML(s) {
+        const dom = document.createElement('div');
+        dom.textContent = s;
+        const text = dom.innerHTML;
+        dom.remove()
+        return text;
+    }
+
     function refreshList() {
         allList = []
         let innerHTML = ""
@@ -109,8 +117,8 @@
         for (let i = 0; i < allElements.length; i += 2) {
             allElements[i].id = "chatgpt-" + (i + 1)
             const id = allElements[i].id
-            const title = allElements[i].innerText.substring(0, 200)
-            const content = allElements[i + 1].innerText.substring(0, 456)
+            const title = encodeXML(allElements[i].innerText.substring(0, 200))
+            const content = encodeXML(allElements[i + 1].innerText.substring(0, 456))
             allList.push({
                 id: id,
                 title: title,
